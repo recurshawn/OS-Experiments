@@ -9,6 +9,8 @@ class process
 {
     public:
         string name;
+        int waitTime;
+        int totalWait;
         int burstTime;
 
 };
@@ -25,7 +27,8 @@ void timeCalc(process * p, int n)
             if(p[i].burstTime!=0)
             {
                 rem++;
-                avgWaitTime += waitTime;
+                p[i].totalWait += (waitTime - p[i].waitTime);
+                p[i].waitTime = waitTime;
                 pr++;
                 cout<<" |"<<waitTime<<"| "<<p[i].name<<" ";
                 if(p[i].burstTime>quantum)
@@ -39,6 +42,8 @@ void timeCalc(process * p, int n)
                     p[i].burstTime = 0;
                 }
 
+
+
             }
 
         }
@@ -48,10 +53,14 @@ void timeCalc(process * p, int n)
         }
         rem=0;
     }
-    avgWaitTime = avgWaitTime/pr;
     cout<<endl;
     cout<<"***********************************"<<endl;
-    cout<<"Average Waiting Time is: "<<avgWaitTime<<endl;
+    for(int i=0;i<n;i++)
+    {
+    avgWaitTime += p[i].totalWait;
+    }
+    avgWaitTime /= n;
+    cout<<"Average Waiting Time is: "<<avgWaitTime;
 }
 
 void insertProcess(process * p, int n)
@@ -62,7 +71,8 @@ void insertProcess(process * p, int n)
     {
         cin>>p[i].name;
         cin>>p[i].burstTime;
-
+        p[i].waitTime=0;
+        p[i].totalWait=0;
     }
 }
 int main()
